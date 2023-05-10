@@ -1,0 +1,58 @@
+rm(list = ls())
+
+ 
+##install.packages("AER")
+library(AER)
+data("GrowthDJ")
+
+# Create a clean Data Frame
+GrowthDJ1=na.omit(GrowthDJ)
+
+
+#4a. create t statistic 
+tstat <- (mean(GrowthDJ1$gdpgrowth)-3)/(sd(GrowthDJ1$gdpgrowth)/sqrt(length(GrowthDJ1$gdpgrowth)))
+
+# use tstat to  reject or "fail to reject" the null hypothesis
+abs(tstat) > qnorm(0.95)
+ ## answer is TRUE, so fail to reject the null
+
+#3.b. # compute the p-value by hand and assign it to pval
+pval <- pnorm(-abs(tstat))
+pval2 <- pnorm(tstat)
+# use pval to accept or reject the null
+pval < 0.05
+## answer is false, so fail to reject the null
+
+
+
+
+----------------------
+
+
+rm(list = ls())
+
+ 
+##install.packages("AER")
+library(AER)
+data("GrowthDJ")
+
+# Create a vector without NA
+GrowthDJ1 = na.omit(GrowthDJ$gdpgrowth)
+
+#4a. create z statistic 
+zstat <- (mean(GrowthDJ1)-3)/(sd(GrowthDJ1)/sqrt(length(GrowthDJ1)))
+
+# use zstat to  reject or "fail to reject" the null hypothesis
+abs(zstat) > qnorm(0.95)
+
+
+#3.b. # compute the p-value 
+pval <- pnorm(-abs(zstat))
+pval2 <- pnorm(zstat)
+
+pval < 0.05
+
+
+
+
+

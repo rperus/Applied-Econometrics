@@ -1,0 +1,36 @@
+rm(list = ls())
+
+#a1 define a function for the estimator
+Y_tilde <- function(x){sum(x)*1.5/(length(x))}
+
+#a2 repeatedly compute estimates and store the results in est_biased
+# rnorm(n, mu, SD)
+set.seed(100)
+est_biased <- replicate(n = 1000, expr = Y_tilde(rnorm(10, 0, 1)))
+mean(est_biased)
+
+#a3 plot a histogram of est_biased
+hist(est_biased)
+
+#a4 add a red vertical line at mu = 0
+abline(v = 0, col = "red")
+abline(v = mean(est_biased), col = "blue")
+
+
+rm(list = ls())
+
+#b1 define a function for the estimator
+Y_tilde <- function(x){sum(x)*1.5/(length(x))}
+
+#b2 repeatedly compute estimates and store the results in est_biased
+# rnorm(n, mu, SD)
+set.seed(100)
+est_biased <- replicate(n = 1000, expr = Y_tilde(rnorm(1000, 0, 1)))
+mean(est_biased)
+
+#b3 plot a histogram of est_biased
+hist(est_biased)
+
+#a4 add a red vertical line at mu = 0
+abline(v = 0, col = "red")
+abline(v = mean(est_biased), col = "blue")

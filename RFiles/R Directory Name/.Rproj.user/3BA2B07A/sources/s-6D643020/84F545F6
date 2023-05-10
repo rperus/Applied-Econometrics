@@ -1,0 +1,32 @@
+{
+    "id": "84F545F6",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1611680410961.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "expression": "rolls",
+        "caption": "rolls",
+        "totalObservations": 36,
+        "displayedObservations": 36,
+        "variables": 2,
+        "cacheKey": "94F61BE1",
+        "object": "rolls",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=rolls&cache_key=94F61BE1&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 4189021006120823933,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1611680410961,
+    "read_only": false,
+    "read_only_alternatives": []
+}

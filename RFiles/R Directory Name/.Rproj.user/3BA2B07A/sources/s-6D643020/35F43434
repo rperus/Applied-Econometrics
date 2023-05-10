@@ -1,0 +1,32 @@
+{
+    "id": "35F43434",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1611775542027.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "expression": "GrowthDJ",
+        "caption": "GrowthDJ",
+        "totalObservations": 121,
+        "displayedObservations": 121,
+        "variables": 10,
+        "cacheKey": "B3950768",
+        "object": "GrowthDJ",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=GrowthDJ&cache_key=B3950768&max_cols=50",
+        "preview": 0
+    },
+    "folds": "",
+    "lastKnownWriteTime": 7074423161671134513,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1611775542027,
+    "read_only": false,
+    "read_only_alternatives": []
+}

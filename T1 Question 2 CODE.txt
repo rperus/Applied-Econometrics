@@ -1,0 +1,42 @@
+## encode x and prob as vectors
+x <- c(2,3,4,5,6,7,8,9,10)
+prob <-c(1/25,2/25,3/25,4/25,5/25,4/25,3/25,2/25,1/25)
+
+##  Calculate the mean
+mean<-sum(x*prob)
+
+## calculate the variance and SD
+variance <- sum(((x-mean)^2)*prob)
+stddev <- sqrt(variance)   
+
+## create a dataframe with x and prob vectors
+dataframe <- data.frame(x,prob)
+
+## calculate and add cumulative probabilities
+dataframe$cumprob <- cumsum(dataframe[,2])
+
+
+## Plot Probability Distribution
+plot(x,prob, type="b",   col = "blue", 
+     main="Probability distribution of the sum of two balls drawn from the two boxes",
+     ylab="Probability", 
+     xlab="Sum of two balls drawn from the two boxes"
+     )
+
+## BarPlot Probability Distribution
+barplot(prob, names.arg=x,   col = "blue", 
+     main="Probability distribution of the sum of two balls drawn from the two boxes",
+     ylab="Probability", 
+     xlab="Sum of two balls drawn from the two boxes"
+     )
+
+
+## Plot Probability Cumulative Distribution
+plot(x,dataframe$cumprob, type="b",   col = "blue",  
+              main="Cumulative probability distribution of the sum of two balls drawn from the two boxes",
+              ylab="Cumulative probability",
+              xlab="Sum of two balls drawn from the two boxes"
+)
+
+
+

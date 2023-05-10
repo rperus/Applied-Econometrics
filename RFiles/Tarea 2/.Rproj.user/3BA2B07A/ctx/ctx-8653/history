@@ -1,0 +1,161 @@
+library(AER)
+data("CPS1985")
+## Plot wage on experience
+# Dev.off>png("Assignament2_fig1a.png")
+plot(CPS1985$wage ~ CPS1985$experience,
+main ="Scatterplot of wage vs experience",
+xlab = "experience (year) (X)",
+ylab = "wage (dollars per hour) (Y)")
+xs <- c(min(CPS198$experience),max(CPS1985$experience))
+library(AER)
+xs <- c(min(CPS198$experience),max(CPS1985$experience))
+xs <- c(min(CPS198$experience),max(CPS1985$experience))
+ys <- c(min(CPS1985$wage),max(CPS1985$wage))
+lines(xs,ys)
+xs <- c(min(CPS1985$experience),max(CPS1985$experience))
+View(CPS1985)
+xs
+lines(xs,ys)
+lines(xs,ys, color="red")
+lines((xs,ys), col="orange", lwd=3)
+lines((xs,ys), col="orange", lwd=3)
+lines(xs,ys, col="orange", lwd=3)
+lines(xs,ys, col="pink", lwd=3)
+lines(xs,ys, col="purple", lwd=2)
+lines(xs,ys, col="purple", lwd=2)
+lines(xs,ys)
+dev.off()
+plot(CPS1985$wage ~ CPS1985$experience,
+data = CPS1985,
+main = "Scatterplot of wage on experience.",
+xlab = "Experience [yr]",
+ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+xs <- c(min(CPS1985$experience),max(CPS1985$experience))
+ys <- c(min(CPS1985$wage),max(CPS1985$wage))
+lines(xs,ys, col="purple", lwd=1)
+ys1 <- c(1,26.29)  ## se quita el punto atípico de mayor sueldo y se traza nueva línea con menor pendiente
+lines(xs,ys1,col="purple", lwd=1)
+dev.off()
+dev.off()
+plot(CPS1985$wage ~ CPS1985$experience,
+data = CPS1985,
+main = "Scatterplot of wage on experience.",
+xlab = "Experience [yr]",
+ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+xs <- c(min(CPS1985$experience),max(CPS1985$experience))
+ys <- c(min(CPS1985$wage),max(CPS1985$wage))
+lines(xs,ys, col="purple", lwd=1)
+ys1 <- c(1,26.29)  ## se quita el punto atípico de mayor sueldo y se traza nueva línea con menor pendiente
+lines(xs,ys1,col="pink", lwd=1)
+plot(CPS1985$wage ~ CPS1985$experience,
+data = CPS1985,
+main = "Scatterplot of wage on experience.",
+xlab = "Experience [yr]",
+ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+xs <- c(min(CPS1985$experience),max(CPS1985$experience))
+ys <- c(min(CPS1985$wage),max(CPS1985$wage))
+lines(xs,ys, col="purple", lwd=1)
+ys1 <- c(1,26.29)  ## se quita el punto atípico de mayor sueldo y se traza nueva línea con menor pendiente
+lines(xs,ys1,col="pink", lwd=2)
+?lines
+boxplot(CPS1985NEW$wage, main = "Boxplot of wages Outliers.", col.main = "red")$out
+CPS1985NEW<- subset(CPS1985, CPS1985$wage < 40)
+#Plot without outliers
+boxplot(CPS1985NEW$wage, main = "Boxplot of wages Outliers.", col.main = "red")$out
+boxplot(CPS1985NEW$wage, main = "Boxplot of wages without outliers.",ylab = "Wage [USD/h]", col.main = "red")$out
+boxplot(CPS1985$wage, main = "Boxplot of wages.", ylab = "Wage [USD/h]",col.main = "red")$out
+summary(lm(wage ~ experience,data = CPS1985NEW))
+# Plot the wage (in US dollars per hour) on experience without outliers
+# Draw the regression line
+plot(CPS1985NEW$wage ~ CPS1985NEW$experience,
+data = CPS1985NEW,
+main = "Scatterplot of wage on experience without outliers.",
+xlab = "Experience [yr]",
+ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+abline(lm(wage ~ experience,data = CPS1985NEW), col="orange", lwd=3)
+gender_bin <- ifelse(CPS1985$gender=="female",1,0)
+CPS1985$gender_bin <-gender_bin
+reg_wage_gender <- lm(wage ~ gender_bin, data=CPS1985)
+summary(reg_wage_gender)
+plot(CPS1985$wage,CPS1985$gender_bin)
+abline(9.9949,-2.1161, col="blue")
+abline(reg_wage_gender, col="blue", lwd=3)
+## Assignment  2 Question 1
+## I created a new project under "C:\Users\rperu\OneDrive\Ms Fintech\Applied Econometrics 1\Tarea 2"
+## installation of AER package
+install.packages("AER")
+library(AER)
+# I opened the data CPS1985
+data("CPS1985")
+#Question 1a
+# Plot the wage (in US dollars per hour) on experience.
+plot(CPS1985$wage ~ CPS1985$experience,
+data = CPS1985,
+main = "Scatterplot of wage on experience.",
+xlab = "Experience [yr]",
+ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+# Create a line with minimun and maximun values
+xs <- c(min(CPS1985$experience),max(CPS1985$experience))
+ys <- c(min(CPS1985$wage),max(CPS1985$wage))
+# Create a line with minimun and maximun values without outliers
+lines(xs,ys, col="purple", lwd=1)
+ys1 <- c(1,26.29)  ## se quita el punto atípico de mayor sueldo y se traza nueva línea con menor pendiente
+lines(xs,ys1,col="pink", lwd=1)
+#dev.off()
+## Assignment  2 Question 1
+## I created a new project under "C:\Users\rperu\OneDrive\Ms Fintech\Applied Econometrics 1\Tarea 2"
+## installation of AER package
+install.packages("AER")
+library(AER)
+# I opened the data CPS1985
+data("CPS1985")
+#Question 1a
+# Plot the wage (in US dollars per hour) on experience.
+plot(CPS1985$wage ~ CPS1985$experience,
+data = CPS1985,
+main = "Scatterplot of wage on experience.",
+xlab = "Experience [yr]",
+ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+# Create a line with minimun and maximun values
+xs <- c(min(CPS1985$experience),max(CPS1985$experience))
+ys <- c(min(CPS1985$wage),max(CPS1985$wage))
+# Create a line with minimun and maximun values without outliers
+lines(xs,ys, col="purple", lwd=1)
+ys1 <- c(1,26.29)  ## se quita el punto atípico de mayor sueldo y se traza nueva línea con menor pendiente
+lines(xs,ys1,col="pink", lwd=1)
+#dev.off()
+## Assignment  2 Question 1
+## I created a new project under "C:\Users\rperu\OneDrive\Ms Fintech\Applied Econometrics 1\Tarea 2"
+## installation of AER package
+install.packages("AER")
+library(AER)
+# I opened the data CPS1985
+data("CPS1985")
+#Question 1a
+# Plot the wage (in US dollars per hour) on experience.
+plot(CPS1985$wage ~ CPS1985$experience,
+data = CPS1985,
+main = "Scatterplot of wage on experience.",
+xlab = "Experience [yr]",
+ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")

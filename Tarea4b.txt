@@ -1,0 +1,110 @@
+rm(list = ls())
+#install.packages("plm")
+library(AER)
+library(sandwich)
+library(stargazer)
+library(plm)
+
+# I opened the data 
+ds4 <- read.csv("Z:\\OneDrive\\Ms Fintech\\Applied Econometrics 1\\Tarea 4\\dataset4.csv",  header = TRUE)
+
+#1 subset of the data that includes only the year 2015
+ds2015 <- ds4[ds4$year==2015, ]
+
+#1a 
+#Regress log(output) on a constant, log(employment) and foreign dummy variable
+reg_1a <- lm(log_output ~ log_employment + foreign, data=ds2015)
+coeftest(reg_1a,vcov = vcovHC, type = "HC1")
+
+#1b
+#Regress log(output) on a constant and the foreign dummy variable
+reg_1b <- lm(log_output ~ foreign, data=ds2015)
+coeftest(reg_1b,vcov = vcovHC, type = "HC1")
+#1b Calculate the residuals
+residuals_1b <- reg_1b$residuals  
+View(residuals_1b)
+
+#1c
+#Regress the log(employment) on a constant and the foreign dummy variable. 
+reg_1c <- lm(log_employment ~ foreign, data=ds2015)
+coeftest(reg_1c,vcov = vcovHC, type = "HC1")
+#1c Calculate the residuals
+residuals_1c <- reg_1c$residuals  
+View(residuals_1c)
+
+#4d
+reg_1d <- lm(residuals_1b ~ residuals_1c  , data=ds2015)
+coeftest(reg_1d,vcov = vcovHC, type = "HC1")
+
+
+#4d
+######################################################
+#Con Heter
+
+#2ai- 
+#2ai association of log(employment) and log(capital) to log(output) 
+reg_2ai <- lm(formula =log_output ~  log_employment+log_capital+(log_employment*foreign)+(log_capital*foreign), data = ds2015)
+coeftest(reg_2ai)
+
+
+## 2aii intercepts vary between foreign- and domestic-owned plants
+reg_2aii <- lm(formula =log_output ~ log_employment + log_capital + foreign, data = ds2015)
+coeftest(reg_2aii)
+
+## 2aiii intercepts and slopes vary between foreign- and domestic-owned plants. 
+reg_2aiii <- lm(formula =log_output ~ log_employment + log_capital + foreign +(log_employment*foreign) + (log_capital*foreign), data = ds2015)
+coeftest(reg_2aiii)
+
+#2bii Test for the equality of all coefficients between foreign-owned and domestic-owned plants.
+#association of log(employment) and log(capital) to log(output) 
+linearHypothesis(reg_2ai,c("foreign=0"), vcov. = vcovHC, type ="HC1")
+
+#intercepts vary between foreign- and domestic-owned plants
+linearHypothesis(reg_2aii,c("foreign=0"), vcov. = vcovHC, type ="HC1")
+
+#intercepts and slopes vary between foreign- and domestic-owned plants. 
+linearHypothesis(reg_2aiii,c("foreign=0"), vcov. = vcovHC, type ="HC1")
+
+
+
+
+
+
+#3- APENDIX K
+reg_3 <- lm(log_output ~hiemployment*hicapital,data=ds2015)
+coeftest(reg_3,vcov = vcovHC, type = "HC1")
+predict(reg_3, newdata = data.frame("hiemployment" = 0, "hicapital" = 0))
+predict(reg_3, newdata = data.frame("hiemployment" = 0, "hicapital" = 1))
+predict(reg_3, newdata = data.frame("hiemployment" = 1, "hicapital" = 0))
+predict(reg_3, newdata = data.frame("hiemployment" = 1, "hicapital" = 1))
+
+reg4 <- lm(log_output ~ age, data = ds4)
+coeftest(reg4, vcov. = vcovHC, type = "HC1")
+
+
+# model with entity and time fixed effects
+reg4a <- plm(log_output ~ age, data = ds4, index = c("foreign", "year"), 
+                model = "within", effect = "twoways")
+
+# summary using clustered standard errors
+coeftest(reg4a, vcov. = vcovHC, type = "HC1", cluster="group")
+
+# test whether state and time fixed effects are jointly significant from zero
+pFtest(model_sete, model,vcov = vcovHC, type = "HC1", cluster="group")
+
+
+#5a
+#average plant production function by regressing log_output on the logarithmic-transformed expenditure
+reg5 <- lm(log_output ~ log_research, data = ds4)
+coeftest(reg5, vcov. = vcovHC, type = "HC1")
+
+#5b
+# model with entity and time fixed effects
+reg5b <- plm(log_output ~ age, data = ds4, index = c("foreign", "year"), 
+                model = "within", effect = "twoways")
+coeftest(reg5b, vcov. = vcovHC, type = "HC1", cluster="group")
+
+#5c
+#Expand your model by including adding BOTH entity and time fixed effects.
+reg5c <- lm(log_output ~ year+log_employment+log_capital+foreign+entry+age+export+exporter+import+importer+hicapital+hiemployment	research+log_research, data = ds4)
+coeftest(reg5c, vcov. = vcovHC, type = "HC1")

@@ -1,0 +1,32 @@
+{
+    "id": "6E39CDD9",
+    "path": null,
+    "project_path": null,
+    "type": "r_dataframe",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1613157297302.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "expression": "CPS1985",
+        "caption": "CPS1985",
+        "totalObservations": "534",
+        "displayedObservations": "534",
+        "variables": "11",
+        "cacheKey": "91C235DF",
+        "object": "CPS1985",
+        "environment": "",
+        "contentUrl": "grid_resource/gridviewer.html?env=&obj=CPS1985&cache_key=91C235DF&max_cols=50",
+        "preview": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 0,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1613157297302,
+    "read_only": false,
+    "read_only_alternatives": []
+}

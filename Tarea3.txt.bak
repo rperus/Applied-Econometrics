@@ -1,0 +1,251 @@
+rm(list = ls())
+#install.packages("stargazer")
+library(AER)
+library(sandwich)
+library(stargazer)
+
+
+# I opened the data 
+df <- read.csv(file=file.choose(), header = TRUE)
+
+#1a Average infant mortality rate (infrate) for cities with lead pipes and for cities with nonlead pipes.
+Y1<- mean(df[df$lead=="1",7])
+Y2 <- mean(df[df$lead=="0",7])
+
+
+# Now we calculate the standar deviation and the size of the samples
+sd1 <- sd(df[df$lead=="1",7])
+sd2 <- sd(df[df$lead=="0",7])
+n1 <- length(df[df$lead=="1",7])
+n2 <- length(df[df$lead=="0",7])
+
+# Now we calculate the standard error 
+SE <- sqrt( (sd1*sd1)/n1+(sd2*sd2)/n2)
+
+# Now we calculate the t-statistic 
+t <- (Y1-Y2)/SE
+
+
+#1b Generate a variable called unlead. 1 if lead=0, = 0 otherwise. And add it to the dataframe
+
+unlead <- ifelse(df$lead==1,0,1)
+df$unlead <-unlead
+
+#Run the regression of infrate on lead and unlead variables
+summary(reg_c <- lm(infrate ~ lead + unlead, data = df))
+
+# See the correlation
+cor(df$lead,df$unlead)
+
+
+
+#1c Run the regression of infrate ~ lead and unlead variables with out the constant
+summary(reg_without_c <- lm(infrate ~ 0 + lead + unlead, data = df))
+
+
+# Compare both with  stargazer
+fit2 <- stargazer(reg_c, reg_without_c,
+                 digits = 3,
+                 header = FALSE,
+                 type = "text", 
+                 align=TRUE,
+                 se=NULL,
+                 column.sep.width = "2pt",
+                 no.space = TRUE,
+                 font.size = "large",
+                 title = "Regression Model of Child Mortality on lead and unlead",
+                 model.numbers = FALSE,
+                 omit.stat=c("f", "ser"),
+                 column.labels = c("Const lead + unlead", " No const lead + unlead"))
+
+
+
+
+
+
+#1c Remove column city,state,year and unlead and run a regression over the whole dataset
+df$city <- NULL
+df$state<- NULL
+df$ï..year <- NULL 
+df$unlead <- NULL 
+
+
+# We can see if the variables are normally distributed
+par(mfrow=c(3,4)) 
+for(i in 1:12) {boxplot(df[,i], main=names(df)[i])}
+
+# We can see the correlations of the variables in the data frame
+#install.packages('GGally')
+library(GGally)
+ggpairs(df)
+
+#Regression with all the variables
+summary(reg_all <- lm(formula = infrate ~ ., data = df))
+
+#More regression are made to maximize adjusted R2
+
+#Final Regression
+summary(reg_fin <- lm(formula = infrate ~ age+log(hardness)+ph+infrate+typhoid_rate+np_tub_rate+precipitation+temperature+lead+foreign_share, data = df))
+
+#Plot of hardness
+hist(df$hardness)
+hist(log(df$hardness))
+
+
+#2a Plot the regression that reports heteroscedasticity-robust standard 
+# errors of infrate on a constant, lead, ph, population, precipitation and temperature
+reg_2a <- lm(formula = infrate ~ lead + ph + population + precipitation + temperature, data = df)
+
+coeftest(reg_2a, vcov.= vcovHC, type="HC1")
+
+# Adj R^2 of the model?
+summary(reg_2a)$adj.r.squared  
+
+
+#2b mal
+
+#Get critical Values
+#qf(p=alpha/2, df1=1, df2=Inf, lower.tail = FALSE) 
+#qf(.95, 1, 172) 
+
+#qf(p=.95, df1=1, df2=Inf, lower.tail = FALSE) 
+#qf(p=.95, df1=1, df2=172, lower.tail = FALSE) 
+
+
+#2b 
+# Heteroscedasticity F-test 
+myH0 <- c("precipitation","temperature")
+
+linearHypothesis(reg_2a, myH0, vcov.= vcovHC, type="HC1")
+
+
+#2d
+
+#Create a dataframe  with infrated, PH in cities with  lead pipes
+PH_lead<- df[df$lead=="1",3]
+Infra_lead<- df[df$lead=="1",4]
+df2 <- data.frame(PH_lead, Infra_lead)
+
+#Create a dataframe  with infrated, PH in cities without  lead pipes
+PH_non_lead<- df[df$lead=="0",3]
+Infra_non_lead<- df[df$lead=="0",4]
+df3 <- data.frame(PH_non_lead, Infra_non_lead)
+
+# Regression of on infrated ~ PH in cities with  lead pipes
+# with  heteroscedasticity-robust standard errors
+reg_infra_ph_lead <- lm(formula = Infra_lead ~ PH_lead, data = df2)
+reg_infra_ph_lead_heter <- coeftest(reg_infra_ph_lead, vcov.= vcovHC, type="HC1")
+reg_infra_ph_lead_heter
+
+
+# Plot of on infrated ~ PH in cities with  lead pipes
+plot(df2$Infra_lead ~ df2$PH_lead, 
+     data = df,
+     main = "Scatterplot of mortality on pH for cities with lead pipes .", 
+     xlab = "PH [Water pH]",
+     ylab = "Mortality [deaths per 100 in pop]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+abline(reg_infra_ph_lead_heter, col="orange", lwd=3)
+
+############################################################################
+
+#Create a dataframe  with infrated, PH in cities with  lead pipes
+PH_lead<- df[df$lead=="1",3]
+Infra_lead<- df[df$lead=="1",4]
+df2 <- data.frame(PH_lead, Infra_lead)
+
+#Create a dataframe  with infrated, PH in cities without  lead pipes
+PH_non_lead<- df[df$lead=="0",3]
+Infra_non_lead<- df[df$lead=="0",4]
+df3 <- data.frame(PH_non_lead, Infra_non_lead)
+
+# Regression of on infrated ~ PH in cities with  lead pipes
+# with  heteroscedasticity-robust standard errors
+reg_infra_ph_lead <- lm(formula = Infra_lead ~ PH_lead, data = df2)
+reg_infra_ph_lead_heter <- coeftest(reg_infra_ph_lead, vcov.= vcovHC, type="HC1")
+reg_infra_ph_lead_heter
+
+
+# Plot of on infrated ~ PH in cities with  lead pipes
+plot(df2$Infra_lead ~ df2$PH_lead, 
+     data = df,
+     main = "Scatterplot of mortality on pH for cities with lead pipes .", 
+     xlab = "PH [Water pH]",
+     ylab = "Mortality [deaths per 100 in pop]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+abline(reg_infra_ph_lead_heter, col="orange", lwd=3)
+
+############################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+abline(reg_infra_ph_lead_heter, col="orange", lwd=3)
+abline(lm(Infra_lead ~ PH_lead,data = df2), col="orange", lwd=3)
+
+
+
+
+summary(reg_infra_ph_non_lead <- lm(formula = Infra_non_lead ~ PH_non_lead, data = df3))
+
+
+
+
+
+# Plot the wage (in US dollars per hour) on experience with the regression line
+plot(df$infrate ~ df$lead, 
+     data = df,
+     main = "Scatterplot of mortality for cities with lead pipes .", 
+     xlab = "Experience [yr]",
+     ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+abline(lm(infrate ~ lead,data = df), col="orange", lwd=3)
+
+
+
+
+
+

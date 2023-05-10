@@ -1,0 +1,231 @@
+## Assignment  2 Question 1
+
+## I created a new project under "C:\Users\rperu\OneDrive\Ms Fintech\Applied Econometrics 1\Tarea 2" 
+
+## installation of AER package
+install.packages("AER")
+library(AER)
+
+# I opened the data CPS1985
+data("CPS1985")  
+
+#Question 1a
+
+# Plot the wage (in US dollars per hour) on experience.
+
+plot(CPS1985$wage ~ CPS1985$experience, 
+     data = CPS1985,
+     main = "Scatterplot of wage on experience.", 
+     xlab = "Experience [yr]",
+     ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+
+# Create a line with minimun and maximun values
+xs <- c(min(CPS1985$experience),max(CPS1985$experience))
+ys <- c(min(CPS1985$wage),max(CPS1985$wage))
+
+# Create a line with minimun and maximun values without outliers
+lines(xs,ys, col="purple", lwd=1)
+ys1 <- c(1,26.29)  ## se quita el punto atípico de mayor sueldo y se traza nueva línea con menor pendiente
+lines(xs,ys1,col="pink", lwd=1)
+
+#dev.off()
+
+   
+#Question 1b
+# Regression  of the averagewage on the average experience 
+summary(lm(wage ~ experience,data = CPS1985))
+
+# Plot the wage (in US dollars per hour) on experience with the regression line
+plot(CPS1985$wage ~ CPS1985$experience, 
+     data = CPS1985,
+     main = "Scatterplot of wage on experience.", 
+     xlab = "Experience [yr]",
+     ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+abline(lm(wage ~ experience,data = CPS1985), col="orange", lwd=3)
+
+
+
+#Question 1c
+#Get rid of outliers
+# I create a Boxplot to visualize tue outliers 
+boxplot(CPS1985$wage, main = "Boxplot of wages.", col.main = "red")$out
+
+
+
+# Use the quantile function to find the 25th and 75th percentiles
+QUANTILE <- quantile(CPS1985$wage, probs=c(.25, .75), na.rm = FALSE)
+
+#Interquartile range 
+IQR <- IQR(CPS1985$wage)
+
+#Dataset without outliers
+CPS1985NEW<- subset(CPS1985, CPS1985$wage > (QUANTILE[1] - 1.5*IQR) & CPS1985$wage < (QUANTILE[2]+1.5*IQR))
+
+
+#Plot without outliers
+boxplot(CPS1985NEW$wage, main = "Boxplot of wages Outliers.", col.main = "red")$out
+
+#  Regression  of the averagewage on the average experience without outliers
+summary(lm(wage ~ experience,data = CPS1985NEW))
+
+# Plot the wage (in US dollars per hour) on experience without outliers
+# Draw the regression line
+plot(CPS1985NEW$wage ~ CPS1985NEW$experience, 
+     data = CPS1985NEW,
+     main = "Scatterplot of wage on experience without outliers.", 
+     xlab = "Experience [yr]",
+     ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+abline(lm(wage ~ experience,data = CPS1985NEW), col="orange", lwd=3)
+
+
+
+
+
+#1d Run a regression of wage on education
+summary(lm(wage ~ education,data = CPS1985NEW))
+
+
+# Draw the regression line
+plot(CPS1985NEW$wage ~ CPS1985NEW$education, 
+     data = CPS1985NEW,
+     main = "Scatterplot of wage on experience without outliers.", 
+     xlab = "Education [yr]",
+     ylab = "Wage [USD/h]",col.main = "red",col.xlab= "blue" )
+box(col="dodgerblue")
+axis(1, col="dodgerblue", col.axis="dodgerblue")
+axis(2, col="dodgerblue", col.axis="dodgerblue")
+abline(lm(wage ~ education,data = CPS1985NEW), col="orange", lwd=3)
+
+
+# Calculate homoskedastic-only standard errors and  heteroskedastic-robust standard errors
+
+reg <- lm(wage ~ education,data = CPS1985NEW)
+reg_summ <- summary(reg)
+hetero_vcov <- vcovHC(reg, type = "HC1")
+rob_se <- sqrt(diag(hetero_vcov))  
+homo_se <- c("SE_beta0" = reg_summ$coef[1,2], "SE_beta1"= reg_summ$coef[2,2])
+# Heteroskedasticity-robust standard errors
+rob_se
+# Homoskedasticty-only standard errors
+homo_se
+
+
+
+
+
+
+reg <- lm(wage ~ education,data = CPS1985NEW)
+reg_summ <- summary(reg)
+hetero_vcov <- vcovHC(reg, type = "HC1")
+robust_se <- sqrt(diag(hetero_vcov))  
+homo_se <- c("SE_beta0" = reg_summ$coef[1,2], "SE_beta1"= reg_summ$coef[2,2])
+# Heteroskedasticity-robust standard errors
+robust_se
+# Homoskedasticty-only standard errors
+homo_se
+
+
+
+
+
+# Question 2
+#ai Average wage of all individuals
+mean(CPS1985$wage)
+
+#aii Average wage of females
+mean_f <- mean(CPS1985[CPS1985$gender=="female",1])
+mean_f 
+
+#aiii Average wage of males
+mean_m <- mean(CPS1985[CPS1985$gender=="male",1])
+mean_m
+
+
+#aiv standard error for the estimated difference of the means
+
+
+wage_men <-CPS1985[CPS1985$gender=="male",1]
+wage_wom <-CPS1985[CPS1985$gender=="female",1]
+sd_men <- sd(wage_men)
+sd_wom <- sd(wage_wom)
+len_men <- length(wage_men)
+len_wom <- length(wage_wom)
+
+# Standard error for the estimated difference
+SE_D <- sqrt( (sd_men*sd_men)/len_men+(sd_wom*sd_wom)/len_wom)
+
+
+
+#2bi
+#Mean difference
+wage_gap = mean_m-mean_f
+wage_gap
+
+#2biii
+# 95% confidence interval 
+up<- wage_gap+1.96*SE_D
+low<- wage_gap-1.96*SE_D
+up
+low
+
+
+#2c
+## Generate dummy variable dum1
+gender_bin <- ifelse(CPS1985$gender=="female",1,0)
+CPS1985$gender_bin <- gender_bin
+
+## Create mean for men and woman
+mean_b_wom <- mean(CPS1985$gender_bin==1)
+mean_b_wom
+mean_b_men <- mean(CPS1985$gender_bin==0)
+mean_b_men
+
+#Mean difference
+mean_diff = mean_b_men-mean_b_wom
+mean_diff
+
+#Create Standar Desviations
+
+sd_b_wom <- sd(CPS1985$gender_bin==1)
+sd_b_wom
+sd_b_men <- sd(CPS1985$gender_bin==0)
+sd_b_men
+
+#Create lenght
+len_b_wom <- length(CPS1985$gender_bin==1)
+len_b_men <- length(CPS1985$gender_bin==1)
+
+# Standard error for the estimated difference
+SE_B_D <- sqrt( (sd_b_men*sd_b_men)/len_b_men+(sd_b_wom*sd_b_wom)/len_b_wom)
+SE_B_D
+
+
+## regression
+summary(lm(CPS1985$gender_bin==1 ~ CPS1985$gender_bin==0, data = CPS1985))
+
+
+
+
+
+
+
+> up<- wage_gap+1.96*SE_D
+> low<- wage_gap-1.96*SE_D
+> up
+[1] 2.965023
+> low
+[1] 1.26709
+
+
+
+mean(CPS1985[CPS1985$gender_bin==1])
+mean(CPS1985[CPS1985$gender=="male",1])

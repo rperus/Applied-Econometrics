@@ -1,0 +1,113 @@
+## Note: The "#" means comment. It is like if you want to write a note or some explanation 
+## in your code. 
+
+
+## Set working directory
+setwd("C:\\Users\\azibrucal\\Dropbox\\Teaching\\Exeter\\BEEM011\\R-exercises")
+
+## Assign value to a variable
+v1 = 5
+v2 = 4
+
+## print/display values in console
+v1
+v2
+
+## Assign a character string; take note of "" for naming conventions
+v3 = "new"
+v4 = "old"
+
+## R functions can use either "=" or "<-" as assignment operators
+v5 <- "very old"
+
+# print
+v3
+v4
+v5
+
+## create vectors for observation
+v6 <- 1:5
+v6
+
+##  Place several elements in a data vector for a variable v7: use the c() function:
+v7 <- c(57,85,76,80,55,85,90)
+v7
+
+## Create a matrix 
+matrix1 <- matrix(c(1,2,3,4,5,6), nrow=2)
+matrix1
+
+## edit the matrix
+edit(matrix1) 
+
+
+## Add variable names to matrix1; se the dimnames() function along with the c() function. 
+## The row variable names are listed first, followed by the column name
+dimnames(matrix1) <- list(c("row1","row2"),c("column1","column2","column3"))
+matrix1
+
+## Alternatively, edit the matrix by editing the spreadsheet (not advisable; not replicable!)
+edit(matrix1)
+
+## construct a data frame (better structure for data than vector or matrix)
+data1 <- data.frame(matrix1)
+
+## describe function in psych package: to provide information about each variable
+install.packages("psych")   ## need to install once only
+library(psych)              ## loading the package psych to enable a set of functions, data, etc.
+describe(data1)
+
+##import data files
+data2 <- read.csv(file="cpi_full_series.csv", header = TRUE)   ## header uses top row to be var names
+data2    ## print; alternatively you can clikc the data2 in the environment to view the data
+
+## you can also load other types of datasets, like STATA files
+install.packages("haven")
+library(haven)
+data3<- read_dta(file="C:\\Users\\azibrucal\\Dropbox\\Teaching\\Exeter\\BEEM011\\SW_dataset\\caschool.dta")
+describe(data3)
+
+## alternatively, you can use file.choose  and locate the file in the folder
+data3<- read_dta(file=file.choose())  
+
+## process
+
+process1 <- function(v6)
+{
+  a = length(v6)
+  b = min(v6)
+  c = max(v6)
+  d = mean(v6)
+  e = sd(v6)
+  f = data.frame(a,b,d,c,e)
+  names(f) = c("length","min", "max", "mean","sd")
+  print(f)
+}
+process1(v6)
+
+
+
+### output
+
+## histogram of vector v6
+length(v7)   ## get the n observations
+hist(v7)    ## plot the histogram
+hist(v7, main=paste("Historgram of","v6"))  ## adding main title; digress; paste function
+
+## plot data points
+plot(data3$read_scr,data3$math_scr)  ## plot read_scr and math_scr from the data3 dataframe
+abline(0,1)  ## add 45-degree line
+dev.off()
+
+## draw a density plot
+pop <- rnorm(n=10000, mean=10, sd=1)  ## generate a fictitious data (random deviates)
+plot(density(pop), lty=1)
+
+## add N(0,1) density plot
+curve(dnorm(x,mean=12), lwd =2, lty = 2, add=T)
+
+## add legend
+legend("topleft",
+      legend = c("N(12,1)", "Pop(10,1)"),
+       lty=c(2,1)
+       )
